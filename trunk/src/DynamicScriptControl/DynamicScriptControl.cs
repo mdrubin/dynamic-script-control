@@ -42,6 +42,27 @@ namespace DynamicScriptControl
         private readonly static ScriptRuntime _scriptRuntime;
         private ScriptEngine _scriptEngine;
         private ScriptSource _scriptSource;
+        private object _content;
+        private ScriptScope _scriptScope;
+        private const string RUBY_PATCH = 
+@"class Object
+    def self.dsc_new_with_attributes(hash = {})
+        raise ArgumentError('I need a  hash to intialize my properties from') unless hash.is_a? Hash
+        new.initialize_from_hash(hash)     
+    end
+
+    def initialize_from_hash(hash)
+        hash.each do |k, v|
+            instance_variable_set(" + "\"@#{k.to_s}, v)" + @"
+        end    
+        self
+    end    
+end
+
+h = eval(attrs)
+o = o.dsc_new_with_attributes h
+o
+";
 
         #region Dependency properties
 
@@ -130,17 +151,23 @@ namespace DynamicScriptControl
         }
 
 
-        protected override void OnInitialized(EventArgs e)
+        public override void  EndInit()
         {
             ValidateProperties();
-
             InitializeLanguageFromExtension();
-            base.OnInitialized(e);
+            EvaluateScript();
 
-            _scriptEngine = _scriptRuntime.GetEngine("rb");
+            Content = _content;
+            base.EndInit();
+        }
+
+        private void EvaluateScript()
+        {
+            _scriptScope = _scriptRuntime.CreateScope();
+            _scriptEngine = _scriptRuntime.GetEngine(ScriptLanguage);
             ScriptLanguage = _scriptEngine.LanguageDisplayName;
             _scriptSource = _scriptEngine.CreateScriptSourceFromFile(ScriptFile);
-            Content = _scriptSource.Execute();
+            _scriptSource.Execute(_scriptScope);
         }
 
         private void InitializeLanguageFromExtension()
