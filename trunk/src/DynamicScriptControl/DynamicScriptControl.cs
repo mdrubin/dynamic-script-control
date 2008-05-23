@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
+using Microsoft.Scripting.Utils;
 
 namespace DynamicScriptControl
 {
@@ -41,10 +42,9 @@ namespace DynamicScriptControl
     {
         private readonly static ScriptRuntime _scriptRuntime;
         private ScriptEngine _scriptEngine;
-        private ScriptSource _scriptSource;
         private object _content;
         private ScriptScope _scriptScope;
-        private const string RUBY_PATCH = 
+        private static readonly string RUBY_CODE = 
 @"class Object
     def self.dsc_new_with_attributes(hash = {})
         raise ArgumentError('I need a  hash to intialize my properties from') unless hash.is_a? Hash
@@ -59,9 +59,11 @@ namespace DynamicScriptControl
     end    
 end
 
-h = eval(attrs)
-o = o.dsc_new_with_attributes h
-o
+def self.dsc_initialize
+  h = eval(attrs)
+  o = {0}.dsc_new_with_attributes h
+  o
+end
 ";
 
         #region Dependency properties
@@ -154,7 +156,7 @@ o
         public override void  EndInit()
         {
             ValidateProperties();
-            InitializeLanguageFromExtension();
+            InitializeLanguageEngine();
             EvaluateScript();
 
             Content = _content;
@@ -166,11 +168,15 @@ o
             _scriptScope = _scriptRuntime.CreateScope();
             _scriptEngine = _scriptRuntime.GetEngine(ScriptLanguage);
             ScriptLanguage = _scriptEngine.LanguageDisplayName;
-            _scriptSource = _scriptEngine.CreateScriptSourceFromFile(ScriptFile);
-            _scriptSource.Execute(_scriptScope);
+            var scriptSource = _scriptEngine.CreateScriptSourceFromFile(ScriptFile);
+            scriptSource.Execute(_scriptScope);
+            _scriptScope.SetVariable("attrs", Attributes);
+            _scriptScope.Execute(string.Format(RUBY_CODE, ClassName));
+
+            _content = _scriptScope.GetVariable<Function<object>>("dsc_initialize")();
         }
 
-        private void InitializeLanguageFromExtension()
+        private void InitializeLanguageEngine()
         {
             if(ScriptLanguage.IsEmpty())
             {
