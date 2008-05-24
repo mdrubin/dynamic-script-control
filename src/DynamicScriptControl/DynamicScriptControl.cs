@@ -38,14 +38,13 @@ namespace DynamicScriptControl
     ///     <MyNamespace:DynamicScriptControl/>
     ///
     /// </summary>
-    public class DynamicScriptControl : ContentControl
+    public class DynamicScriptControl : Canvas
     {
         private readonly static ScriptRuntime _scriptRuntime;
         private ScriptEngine _scriptEngine;
-        private object _content;
+        private UIElement _content;
         private ScriptScope _scriptScope;
-        private static readonly string RUBY_CODE = 
-@"class Object
+        private const string RUBY_CODE = @"class Object
     def self.dsc_new_with_attributes(hash = {})
         raise ArgumentError('I need a  hash to intialize my properties from') unless hash.is_a? Hash
         new.initialize_from_hash(hash)     
@@ -53,15 +52,15 @@ namespace DynamicScriptControl
 
     def initialize_from_hash(hash)
         hash.each do |k, v|
-            instance_variable_set(" + "\"@#{k.to_s}, v)" + @"
+            instance_variable_set(" + "\"@#{k.to_s}\", v)" + @"
         end    
         self
     end    
 end
 
 def self.dsc_initialize
-  h = eval(attrs)
-  o = {0}.dsc_new_with_attributes h
+  h = ##ATTRIBUTES##
+  o = ##CLASS##.dsc_new_with_attributes h
   o
 end
 ";
@@ -95,7 +94,7 @@ end
         /// <value>The script file.</value>
         public string ScriptFile
         {
-            get { return GetValue(ScriptFileProperty).ToString(); }
+            get { return SafeGetValue(ScriptFileProperty, string.Empty); }
             set { SetValue(ScriptFileProperty, value); }
         }
 
@@ -107,7 +106,7 @@ end
         /// <value>The script language.</value>
         public string ScriptLanguage
         {
-            get { return GetValue(ScriptLanguageProperty).ToString(); }
+            get { return SafeGetValue(ScriptLanguageProperty, string.Empty); }
             set { SetValue(ScriptLanguageProperty, value); }
         }
 
@@ -119,7 +118,7 @@ end
         /// <value>The name of the class.</value>
         public string ClassName
         {
-            get { return GetValue(ClassNameProperty).ToString(); }
+            get { return SafeGetValue(ClassNameProperty, string.Empty); }
             set { SetValue(ClassNameProperty, value); }
         }
 
@@ -130,12 +129,20 @@ end
         /// <value>The attributes.</value>
         public string Attributes
         {
-            get { return GetValue(AttributesProperty).ToString(); }
+            get
+            {
+                return SafeGetValue(AttributesProperty, string.Empty);
+            }
             set { SetValue(AttributesProperty, value); }
         }
 
         #endregion
 
+        public T SafeGetValue<T>(DependencyProperty property, T defaultValue)
+        {
+            var result = GetValue(property);
+            return result.IsNull() ? defaultValue : (T) result;
+        }
 
         static DynamicScriptControl()
         {
@@ -159,21 +166,28 @@ end
             InitializeLanguageEngine();
             EvaluateScript();
 
-            Content = _content;
             base.EndInit();
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            Children.Add(_content);
         }
 
         private void EvaluateScript()
         {
-            _scriptScope = _scriptRuntime.CreateScope();
             _scriptEngine = _scriptRuntime.GetEngine(ScriptLanguage);
+            _scriptScope = _scriptEngine.CreateScope();
             ScriptLanguage = _scriptEngine.LanguageDisplayName;
             var scriptSource = _scriptEngine.CreateScriptSourceFromFile(ScriptFile);
             scriptSource.Execute(_scriptScope);
-            _scriptScope.SetVariable("attrs", Attributes);
-            _scriptScope.Execute(string.Format(RUBY_CODE, ClassName));
 
-            _content = _scriptScope.GetVariable<Function<object>>("dsc_initialize")();
+            var attrs = Attributes.IsEmpty() ? "{}" : Attributes;
+            var initializationScript = RUBY_CODE.Replace("##CLASS##", ClassName).Replace("##ATTRIBUTES##", attrs);
+            _scriptScope.Execute(initializationScript);
+
+            _content = _scriptScope.GetVariable<Function<UIElement>>("dsc_initialize")();
         }
 
         private void InitializeLanguageEngine()
