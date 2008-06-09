@@ -38,7 +38,7 @@ namespace DynamicScriptControl
     ///     <MyNamespace:DynamicScriptControl/>
     ///
     /// </summary>
-    public class DynamicScriptControl : Canvas
+    public class DynamicScriptControl : ContentControl
     {
         private readonly static ScriptRuntime _scriptRuntime;
         private ScriptEngine _scriptEngine;
@@ -166,13 +166,13 @@ end
             InitializeLanguageEngine();
             EvaluateScript();
 
-            base.EndInit();
+            base.EndInit(); // finish up and move on to OnInitialized
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            Children.Add(_content);
+            Content = _content;
         }
 
         private void EvaluateScript()
