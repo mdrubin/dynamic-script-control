@@ -6,11 +6,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DynamicScriptControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter />
-                    </Border>
+                    <ContentPresenter />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
