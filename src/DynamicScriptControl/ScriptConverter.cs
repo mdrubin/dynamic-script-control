@@ -15,15 +15,15 @@ namespace DynamicScriptControl
 
         #region Ruby code
 
-        private const string RUBY_CODE = @"class Object
-    def self.dsc_new_with_attributes(hash = {})
+        private static readonly string RUBY_CODE = string.Format(@"class Object
+    def self.dsc_new_with_attributes({0})
         raise ArgumentError('I need a  hash to intialize my properties from') unless hash.is_a? Hash
         new.initialize_from_hash(hash)     
     end
 
     def initialize_from_hash(hash)
         hash.each do |k, v|
-            instance_variable_set(" + "\"@#{k.to_s}\", v)" + @"
+            instance_variable_set({1} , v)
         end    
         self
     end    
@@ -34,7 +34,7 @@ end
   o = ##CLASS##.dsc_new_with_attributes h
   o
 #end
-";
+", "hash = {}", "\"@#{k.to_s}\"");
 
         #endregion
 
