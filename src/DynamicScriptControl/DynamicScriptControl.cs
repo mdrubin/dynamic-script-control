@@ -65,7 +65,6 @@ namespace DynamicScriptControl
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof (DynamicScriptControl),
                                                      new FrameworkPropertyMetadata(typeof (DynamicScriptControl)));
-            _scriptRuntime = ScriptRuntime.Create();
         }
 
         #endregion
