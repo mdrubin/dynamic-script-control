@@ -41,9 +41,12 @@ task :update_from_svn do
   system "svn up" 
 end
 
-desc "Creates a zip of the release build"
-task :package => :deploy_build do 
- package_files
+desc "Creates a zip after building the release build"
+task :package => [:deploy_build, :zip_only]
+
+desc "Creates a zip file of a release build" 
+task :zip_only do
+  package_files
 end
 
 def build(options={})
@@ -55,7 +58,8 @@ end
 
  def package_files
    Dir.mkdir("#{@base_path}/deploy") unless File.exists? "#{@base_path}/deploy"
-   Zip::ZipFile.open("#{@base_path}/deploy/dynamic-script-control.zip", Zip::ZipFile::CREATE) do |zipfile|
+   version = ENV['v'].nil? ? '' : "-#{ENV['v']}"
+   Zip::ZipFile.open("#{@base_path}/deploy/dynamic-script-control#{version}.zip", Zip::ZipFile::CREATE) do |zipfile|
      Dir.glob("#{@release_path}**/*").each do |file|
       zipfile.add(File.basename(file), file)
      end                    
