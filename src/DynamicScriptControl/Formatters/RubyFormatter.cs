@@ -49,7 +49,7 @@ end
                 var sb = new StringBuilder();
                 foreach (var attribute in dict)
                 {
-                    sb.AppendLine(attribute.ToCode());
+                    sb.AppendLine(attribute.ToCode("self.{0} = {1}"));
                 }
                 return sb.ToString();
             }

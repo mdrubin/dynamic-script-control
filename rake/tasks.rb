@@ -1,8 +1,8 @@
 require 'zip/zip'
 require 'zip/zipfilesystem'
 
-@release_path = "#{File.dirname(__FILE__) + "\\.."}\\build\\"
-@base_path = File.dirname(__FILE__) + "/.."
+@base_path = File.expand_path(File.dirname(__FILE__) + "/..")
+@release_path = "#@base_path\\build\\"
 
 task :default => ["build"] do
 end
@@ -43,7 +43,6 @@ namespace :zip do
   task :source => 'svn:export' do
     src_dep_path = "#@base_path/deploy/src"
     package_files "@base_path/deploy/src", "src"
-    Dir.rm_rf(src_dep_path)
   end
 end
 
