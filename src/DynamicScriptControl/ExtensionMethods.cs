@@ -1,6 +1,8 @@
-using System.Collections;
-using System.Windows;
+#region Usings
+
 using System.Collections.Generic;
+
+#endregion
 
 namespace DynamicScriptControl
 {
@@ -20,7 +22,5 @@ namespace DynamicScriptControl
         {
             return collection.Count == 0;
         }
-
-        
     }
 }

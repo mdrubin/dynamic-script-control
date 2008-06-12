@@ -4,11 +4,18 @@
     xmlns:DynamicScriptControl="clr-namespace:DynamicScriptControl;assembly=DynamicScriptControl"
     Title="Window1" Height="300" Width="300">
     <StackPanel Background="White">
-        <DynamicScriptControl:DynamicScriptControl ScriptFile="prefilled_text_box.rb" ClassName="PrefilledTextBox" />
+        <DynamicScriptControl:DynamicScriptControl 
+            ScriptFile="prefilled_text_box.rb" 
+            ClassName="PrefilledTextBox" />
 
-        <DynamicScriptControl:DynamicScriptControl ScriptFile="prefilled_text_box.rb" ClassName="PrefilledTextBox" >
+        <DynamicScriptControl:DynamicScriptControl 
+            ScriptFile="prefilled_text_box.rb" 
+            ClassName="PrefilledTextBox" >
             <DynamicScriptControl:DynamicScriptControl.Attributes>
-                <DynamicScriptControl:Attribute Key="text" Value="Call me crazy" FormatString="'{0}'" />
+                <DynamicScriptControl:Attribute 
+                    Key="text" 
+                    Value="Call me crazy but it looks like it works" 
+                    FormatString="'{0}'" />
             </DynamicScriptControl:DynamicScriptControl.Attributes>
         </DynamicScriptControl:DynamicScriptControl>
     </StackPanel> 

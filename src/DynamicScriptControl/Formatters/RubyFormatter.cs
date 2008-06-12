@@ -1,15 +1,15 @@
-using System.Collections.Generic;
+#region Usings
+
 using System.Collections.ObjectModel;
 using System.Text;
 using DynamicScriptControl.Formatters.ExtensionsForRuby;
 
+#endregion
+
 namespace DynamicScriptControl.Formatters
 {
-
-
     public class RubyFormatter : FormatterBase
     {
-        
         #region Ruby code
 
         private const string RUBY_CODE = @"class ##CLASS##
@@ -53,8 +53,6 @@ end
                 }
                 return sb.ToString();
             }
-
-            
         }
     }
 }
