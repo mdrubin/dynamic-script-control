@@ -1,8 +1,5 @@
 ﻿#region Usings
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Scripting.Hosting;
@@ -42,7 +39,6 @@ namespace DynamicScriptControl
     /// </summary>
     public class DynamicScriptControl : Control
     {
-
         #region Private static fields
 
         private static ScriptRuntime _scriptRuntime;
@@ -74,20 +70,23 @@ namespace DynamicScriptControl
 
         public static readonly DependencyProperty AttributesProperty =
             DependencyProperty.Register(
-                "Attributes", 
-                typeof (AttributeCollection), 
+                "Attributes",
+                typeof (AttributeCollection),
                 typeof (DynamicScriptControl),
                 new UIPropertyMetadata(new AttributeCollection())
-            );
-
-        public static readonly DependencyProperty ScriptFileProperty =
-            DependencyProperty.Register("ScriptFile", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
-
-        public static readonly DependencyProperty ScriptLanguageProperty =
-            DependencyProperty.Register("ScriptLanguage", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
+                );
 
         public static readonly DependencyProperty ClassNameProperty =
-            DependencyProperty.Register("ClassName", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
+            DependencyProperty.Register("ClassName", typeof (string), typeof (DynamicScriptControl),
+                                        new UIPropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty ScriptFileProperty =
+            DependencyProperty.Register("ScriptFile", typeof (string), typeof (DynamicScriptControl),
+                                        new UIPropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty ScriptLanguageProperty =
+            DependencyProperty.Register("ScriptLanguage", typeof (string), typeof (DynamicScriptControl),
+                                        new UIPropertyMetadata(string.Empty));
 
         #endregion
 
@@ -98,14 +97,13 @@ namespace DynamicScriptControl
 
         #region Instance properties
 
-
         /// <summary>
         /// Gets or sets the name of the class.
         /// </summary>
         /// <value>The name of the class.</value>
         public string ClassName
         {
-            get { return (string)GetValue(ClassNameProperty); }
+            get { return (string) GetValue(ClassNameProperty); }
             set { SetValue(ClassNameProperty, value); }
         }
 
@@ -115,7 +113,7 @@ namespace DynamicScriptControl
         /// <value>The script language.</value>
         public string ScriptLanguage
         {
-            get { return (string)GetValue(ScriptLanguageProperty); }
+            get { return (string) GetValue(ScriptLanguageProperty); }
             set { SetValue(ScriptLanguageProperty, value); }
         }
 
@@ -125,7 +123,7 @@ namespace DynamicScriptControl
         /// <value>The script file.</value>
         public string ScriptFile
         {
-            get { return (string)GetValue(ScriptFileProperty); }
+            get { return (string) GetValue(ScriptFileProperty); }
             set { SetValue(ScriptFileProperty, value); }
         }
 
@@ -136,11 +134,10 @@ namespace DynamicScriptControl
         /// <value>The attributes.</value>
         public AttributeCollection Attributes
         {
-            get { return (AttributeCollection)GetValue(AttributesProperty); }
+            get { return (AttributeCollection) GetValue(AttributesProperty); }
             set { SetValue(AttributesProperty, value); }
         }
 
         #endregion
-        
     }
 }

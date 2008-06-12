@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 namespace DynamicScriptControl.Formatters
 {
     public abstract class FormatterBase : IFormatter
     {
-        protected readonly string _className;
         protected readonly AttributeCollection _attributes;
+        protected readonly string _className;
 
         protected FormatterBase(string className, AttributeCollection attributes)
         {
@@ -13,6 +11,10 @@ namespace DynamicScriptControl.Formatters
             _attributes = attributes;
         }
 
+        #region IFormatter Members
+
         public abstract string Format();
+
+        #endregion
     }
 }
