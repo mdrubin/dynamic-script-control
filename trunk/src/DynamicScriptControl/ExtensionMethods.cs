@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace DynamicScriptControl
 {
@@ -12,6 +14,11 @@ namespace DynamicScriptControl
         public static bool IsNull(this object self)
         {
             return self == null;
+        }
+
+        public static bool IsEmpty<T>(this ICollection<T> collection)
+        {
+            return collection.Count == 0;
         }
 
         

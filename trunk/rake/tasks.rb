@@ -1,5 +1,6 @@
 require 'zip/zip'
 require 'zip/zipfilesystem'
+require 'fileutils'
 
 @release_path = "#{File.dirname(__FILE__) + "\\.."}\\build\\"
 @base_path = File.dirname(__FILE__) + "/.."
@@ -25,28 +26,61 @@ namespace :build do
 end
 
 desc "Updates from the repository, builds a release version and updates svn"
-task :deploy_build => [:update_from_svn, "build:release", :upload_to_svn]
+task :deploy_build => ['svn:update', "build:release", 'svn:check_in']
 
-desc "uploads the current sources to svn"
-task :upload_to_svn => [:update_from_svn] do
-  msg = ENV['cm'].nil? ? "Automatic check in from rake" : ENV['cm']
-  tmp_msg= "#@base_path/svn_message"
-  File.open(tmp_msg, 'w+') { |f| f << msg }  
-  system "svn ci -F #{tmp_msg}"  
-  File.delete tmp_msg
-end
 
-desc "Updates from svn" 
-task :update_from_svn do
-  system "svn up" 
-end
 
 desc "Creates a zip after building the release build"
-task :package => [:deploy_build, :zip_only]
+task :package => [:deploy_build, 'zip:release', 'zip:source' ]
 
-desc "Creates a zip file of a release build" 
-task :zip_only do
-  package_files
+namespace :zip do
+
+  desc "Creates a zip file of a release build" 
+  task :release do
+    package_files @release_path, 'binaries' 
+  end
+
+  desc "Creates a zip file of a the source code"
+  task :source => 'svn:local_export' do
+    src_dep_path = "#@base_path/deploy/src"
+    package_files "@base_path/deploy/src", "src"
+    Dir.rm_rf(src_dep_path)
+  end
+end
+
+namespace :svn do
+  
+  desc "uploads the current sources to svn"
+  task :check_in => [:update] do
+    msg = ENV['cm'].nil? ? "Automatic check in from rake" : ENV['cm']
+    tmp_msg= "#@base_path/svn_message"
+    File.open(tmp_msg, 'w+') { |f| f << msg }  
+    system "svn ci -F #{tmp_msg}"  
+    File.delete tmp_msg
+  end
+  
+  desc "Updates from svn" 
+  task :update do
+    system "svn up" 
+  end
+  
+  desc "behaves like export but from the local filesystem"
+  task :local_export do
+    Dir.mkdir("#@base_path/deploy") unless File.exists? "#@base_path/deploy" 
+    src_dep_path = "#@base_path/deploy/src"
+    Dir.mkdir(src_dep_path)
+    sources = Dir.glob("#@base_path/src/**/*").collect{ |f| f unless /.svn/ =~ f }.compact!
+    FileUtils.cp_r sources, src_dep_path 
+    #Dir.rm_rf(src_dep_path)
+  end
+  
+  
+  task :export => :check_in do
+    Dir.mkdir("#@base_path/deploy") unless File.exists? "#@base_path/deploy" 
+    src_dep_path = "#@base_path/deploy/src"
+    Dir.mkdir(src_dep_path)
+    system "svn export http://dynamic-script-control.googlecode.com/svn/trunk/ #{src_dep_path}"
+  end
 end
 
 def build(options={})
@@ -56,12 +90,12 @@ def build(options={})
   system "#{cmd} /p:#{opts}" unless opts.nil? || opts.empty?  
 end
 
- def package_files
+ def package_files(path, type)
    Dir.mkdir("#{@base_path}/deploy") unless File.exists? "#{@base_path}/deploy"
    version = ENV['v'].nil? ? '' : "-#{ENV['v']}"
-   Zip::ZipFile.open("#{@base_path}/deploy/dynamic-script-control#{version}.zip", Zip::ZipFile::CREATE) do |zipfile|
-     Dir.glob("#{@release_path}**/*").each do |file|
-      zipfile.add(File.basename(file), file)
+   Zip::ZipFile.open("#{@base_path}/deploy/dynamic-script-control-#{type}#{version}.zip", Zip::ZipFile::CREATE) do |zipfile|
+     Dir.glob("#{path}**/*").each do |file|
+      zipfile.add(File.basename(file), file) unless /.svn/ =~ file
      end                    
    end                                                                                
    

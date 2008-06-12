@@ -5,6 +5,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicScriptControl", "Dyn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "..\TestApplication\TestApplication.csproj", "{E0C5D059-2371-4446-A355-8E2A73729FE7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C4166BFA-475B-4297-8683-AADB943C9855}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Rakefile = ..\..\Rakefile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rake", "rake", "{1B35D71E-6A56-4E74-A587-0E423C8CB663}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\rake\tasks.rb = ..\..\rake\tasks.rb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1B35D71E-6A56-4E74-A587-0E423C8CB663} = {C4166BFA-475B-4297-8683-AADB943C9855}
 	EndGlobalSection
 EndGlobal
