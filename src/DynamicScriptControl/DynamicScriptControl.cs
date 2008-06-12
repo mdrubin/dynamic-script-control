@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,14 +18,14 @@ namespace DynamicScriptControl
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:DynamicScriptContentControl"
+    ///     xmlns:MyNamespace="clr-namespace:DynamicScriptControl"
     ///
     ///
     /// Step 1b) Using this custom control in a XAML file that exists in a different project.
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:DynamicScriptContentControl;assembly=DynamicScriptContentControl"
+    ///     xmlns:MyNamespace="clr-namespace:DynamicScriptControl;assembly=DynamicScriptControl"
     ///
     /// You will also need to add a project reference from the project where the XAML file lives
     /// to this project and Rebuild to avoid compilation errors:
@@ -71,47 +72,71 @@ namespace DynamicScriptControl
 
         #region Dependency properties
 
-        // Using a DependencyProperty as the backing store for Attributes.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AttributesProperty =
-            DependencyProperty.Register("Attributes", typeof (string), typeof (DynamicScriptControl), new UIPropertyMetadata(string.Empty));
+            DependencyProperty.Register(
+                "Attributes", 
+                typeof (AttributeCollection), 
+                typeof (DynamicScriptControl),
+                new UIPropertyMetadata(new AttributeCollection())
+            );
 
-        // Using a DependencyProperty as the backing store for ScriptFile.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ScriptFileProperty =
             DependencyProperty.Register("ScriptFile", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
-        // Using a DependencyProperty as the backing store for ScriptLanguage.  This enables animation, styling, binding, etc...
+
         public static readonly DependencyProperty ScriptLanguageProperty =
             DependencyProperty.Register("ScriptLanguage", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
 
-        // Using a DependencyProperty as the backing store for ClassName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ClassNameProperty =
             DependencyProperty.Register("ClassName", typeof(string), typeof(DynamicScriptControl), new UIPropertyMetadata(string.Empty));
 
         #endregion
 
+        public DynamicScriptControl()
+        {
+            Attributes = new AttributeCollection();
+        }
+
         #region Instance properties
 
+
+        /// <summary>
+        /// Gets or sets the name of the class.
+        /// </summary>
+        /// <value>The name of the class.</value>
         public string ClassName
         {
             get { return (string)GetValue(ClassNameProperty); }
             set { SetValue(ClassNameProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the script language.
+        /// </summary>
+        /// <value>The script language.</value>
         public string ScriptLanguage
         {
             get { return (string)GetValue(ScriptLanguageProperty); }
             set { SetValue(ScriptLanguageProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the script file.
+        /// </summary>
+        /// <value>The script file.</value>
         public string ScriptFile
         {
             get { return (string)GetValue(ScriptFileProperty); }
             set { SetValue(ScriptFileProperty, value); }
         }
 
-        
-        public string Attributes
+
+        /// <summary>
+        /// Gets or sets the attributes.
+        /// </summary>
+        /// <value>The attributes.</value>
+        public AttributeCollection Attributes
         {
-            get { return (string) GetValue(AttributesProperty); }
+            get { return (AttributeCollection)GetValue(AttributesProperty); }
             set { SetValue(AttributesProperty, value); }
         }
 

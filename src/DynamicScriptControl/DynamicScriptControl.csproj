@@ -81,8 +81,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute.cs" />
     <Compile Include="DynamicScriptControl.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Formatters\FormatterBase.cs" />
+    <Compile Include="Formatters\IFormatter.cs" />
+    <Compile Include="Formatters\RubyFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

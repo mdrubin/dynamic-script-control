@@ -29,3 +29,9 @@ class PrefilledTextBox < TextBox
   end
   
 end
+
+
+
+class FromAttributesTextBox < TextBox
+  
+end
