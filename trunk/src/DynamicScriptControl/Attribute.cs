@@ -20,9 +20,9 @@ namespace DynamicScriptControl
             set { _formatString = value; }
         }
 
-        public string ToCode()
+        public string ToCode(string formatString)
         {
-            return string.Format("self.{0} = {1}", Key, string.Format(FormatString, Value));
+            return string.Format(formatString, Key, string.Format(FormatString, Value));
         }
     }
 
