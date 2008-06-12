@@ -1,6 +1,5 @@
 require 'zip/zip'
 require 'zip/zipfilesystem'
-require 'fileutils'
 
 @release_path = "#{File.dirname(__FILE__) + "\\.."}\\build\\"
 @base_path = File.dirname(__FILE__) + "/.."
@@ -64,22 +63,11 @@ namespace :svn do
     system "svn up" 
   end
   
-  desc "behaves like export but from the local filesystem"
-  task :local_export do
-    Dir.mkdir("#@base_path/deploy") unless File.exists? "#@base_path/deploy" 
-    src_dep_path = "#@base_path/deploy/src"
-    Dir.mkdir(src_dep_path)
-    sources = Dir.glob("#@base_path/src/**/*").collect{ |f| f unless /.svn/ =~ f }.compact!
-    FileUtils.cp_r sources, src_dep_path 
-    #Dir.rm_rf(src_dep_path)
-  end
-  
   desc "checks out the source code without the svn metadata" 
   task :export => :check_in do
     Dir.mkdir("#@base_path/deploy") unless File.exists? "#@base_path/deploy" 
     src_dep_path = "#@base_path/deploy/src"
     rm_rf(src_dep_path) if File.exist? src_dep_path
-    Dir.mkdir(src_dep_path)
     system "svn export http://dynamic-script-control.googlecode.com/svn/trunk/ #{src_dep_path}"
   end
 end
