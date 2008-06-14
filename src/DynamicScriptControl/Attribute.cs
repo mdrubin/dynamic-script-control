@@ -11,9 +11,28 @@ namespace DynamicScriptControl
     {
         private string _formatString;
         private string _key;
-
         private string _value;
+        private AttributeType _attributeType = AttributeType.Default;
 
+        /// <summary>
+        /// Gets or sets the type of the attribute.
+        /// </summary>
+        /// <value>The type of the attribute.</value>
+        public AttributeType AttributeType
+        {
+            get { return _attributeType; }
+            set
+            {
+                if (_attributeType == value) return;
+                _attributeType = value;
+                OnPropertyChanged("AttributeType");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the key.
+        /// </summary>
+        /// <value>The key.</value>
         public string Key
         {
             get { return _key; }
@@ -25,6 +44,10 @@ namespace DynamicScriptControl
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
         public string Value
         {
             get { return _value; }
@@ -36,6 +59,10 @@ namespace DynamicScriptControl
             }
         }
 
+        /// <summary>
+        /// Gets or sets the format string.
+        /// </summary>
+        /// <value>The format string.</value>
         public string FormatString
         {
             get
@@ -58,9 +85,14 @@ namespace DynamicScriptControl
 
         #endregion
 
-        public string ToCode(string formatString)
+        /// <summary>
+        /// Returns this attributes code representation.
+        /// </summary>
+        /// <param name="codeTemplate">The code template.</param>
+        /// <returns></returns>
+        public string ToCode(string codeTemplate)
         {
-            return string.Format(formatString, Key, string.Format(FormatString, Value));
+            return string.Format(codeTemplate, Key, string.Format(FormatString, Value));
         }
 
         /// <summary>

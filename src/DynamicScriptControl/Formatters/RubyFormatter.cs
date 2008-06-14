@@ -1,5 +1,6 @@
 #region Usings
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using DynamicScriptControl.Formatters.ExtensionsForRuby;
@@ -44,12 +45,23 @@ end
     {
         public static class ExtensionMethods
         {
+            private static readonly Dictionary<AttributeType, string> _attributeTypeMapping = new Dictionary<AttributeType, string>
+                                                                                         {
+                                                                                             { AttributeType.Default, "self.{0} = {1}" },
+                                                                                             { AttributeType.Text, "self.{0} = '{1}'" },
+#if IRA
+                                                                                             { AttributeType.Resource, "self.{0} = DynamicScriptControl::Workarounds.get_app_resource '{1}'" },
+#endif
+                                                                                             { AttributeType.Number, "self.{0} = {1}" },
+                                                                                             { AttributeType.Date, "self.{0} = Time.parse '{1}'" }
+                                                                                         };
+
             public static string ToCode(this ObservableCollection<Attribute> dict)
             {
                 var sb = new StringBuilder();
                 foreach (var attribute in dict)
                 {
-                    sb.AppendLine(attribute.ToCode("self.{0} = {1}"));
+                    sb.AppendLine(attribute.ToCode(_attributeTypeMapping[attribute.AttributeType]));
                 }
                 return sb.ToString();
             }
