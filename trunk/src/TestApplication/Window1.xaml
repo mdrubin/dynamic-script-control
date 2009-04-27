@@ -18,6 +18,21 @@
                     FormatString="'{0}'" />
             </DynamicScriptControl:DynamicScriptControl.Attributes>
         </DynamicScriptControl:DynamicScriptControl>
+        
+        <DynamicScriptControl:DynamicScriptControl 
+            ScriptFile="prefilled_text_box.py" 
+            ClassName="PrefilledTextBox" />
+
+        <DynamicScriptControl:DynamicScriptControl 
+            ScriptFile="prefilled_text_box.py" 
+            ClassName="PrefilledTextBox" >
+            <DynamicScriptControl:DynamicScriptControl.Attributes>
+                <DynamicScriptControl:Attribute 
+                    Key="Text" 
+                    Value="In Python too!" 
+                    FormatString="'{0}'" />
+            </DynamicScriptControl:DynamicScriptControl.Attributes>
+        </DynamicScriptControl:DynamicScriptControl>
     </StackPanel> 
     
 </Window>
