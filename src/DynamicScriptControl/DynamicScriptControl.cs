@@ -3,6 +3,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using IronRuby;
 using Microsoft.Scripting.Hosting;
 
 #endregion
@@ -48,8 +49,11 @@ namespace DynamicScriptControl
         {
             get
             {
+                var setup = new ScriptRuntimeSetup();
+                setup.LanguageSetups.Add(Ruby.CreateRubySetup());
+                setup.LanguageSetups.Add(IronPython.Hosting.Python.CreateLanguageSetup(null));
                 if (_scriptRuntime == null)
-                    _scriptRuntime = ScriptRuntime.Create();
+                    _scriptRuntime = Ruby.CreateRuntime(setup);
                 return _scriptRuntime;
             }
             set { _scriptRuntime = value; }

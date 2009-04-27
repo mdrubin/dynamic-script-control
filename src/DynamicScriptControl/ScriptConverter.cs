@@ -26,7 +26,7 @@ namespace DynamicScriptControl
 
             if (scriptLanguage.IsEmpty()) scriptLanguage = Path.GetExtension(scriptFile);
 
-            var engine = DynamicScriptControl.ScriptRuntime.GetEngine(scriptLanguage);
+            var engine = DynamicScriptControl.ScriptRuntime.GetEngineByFileExtension(scriptLanguage);
 
             var scriptScope = engine.CreateScope();
             var scriptSource = engine.CreateScriptSourceFromFile(scriptFile);
@@ -34,7 +34,7 @@ namespace DynamicScriptControl
 
             var script = scriptScope.CreateFormatter(className, attributes).Format();
 
-            return scriptScope.Execute<UIElement>(script);
+            return engine.Execute<UIElement>(script, scriptScope);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -52,13 +52,9 @@ namespace DynamicScriptControl
             public static IFormatter CreateFormatter(this ScriptScope scriptScope, string className,
                                                      AttributeCollection attributes)
             {
-                switch (scriptScope.Engine.LanguageDisplayName.ToLowerInvariant())
-                {
-                    case "IronPython":
-                        throw new NotImplementedException("IronPython support hasn't been implemented yet.");
-                    default:
-                        return new RubyFormatter(className, attributes);
-                }
+                if (scriptScope.Engine.Setup.Names.Contains("Python")) return new PythonFormatter(className, attributes);
+                
+                return new RubyFormatter(className, attributes);
             }
         }
     }

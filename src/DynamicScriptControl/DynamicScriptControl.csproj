@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{345FD83F-1761-4FA2-BE7A-CDB9FCB4F6A3}</ProjectGuid>
     <OutputType>library</OutputType>
@@ -41,6 +41,14 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronPython, Version=2.6.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.6.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\IronPython.Modules.dll</HintPath>
+    </Reference>
     <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\IronRuby.dll</HintPath>
@@ -56,6 +64,10 @@
     <Reference Include="Microsoft.Scripting.Core, Version=1.0.0.2000, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Microsoft.Scripting.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -94,7 +106,9 @@
     <Compile Include="Enums.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Formatters\FormatterBase.cs" />
+    <Compile Include="Formatters\FormatterExtensionMethods.cs" />
     <Compile Include="Formatters\IFormatter.cs" />
+    <Compile Include="Formatters\PythonFormatter.cs" />
     <Compile Include="Formatters\RubyFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
