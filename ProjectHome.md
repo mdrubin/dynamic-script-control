@@ -1,0 +1,1 @@
+We created a control that can be used with WPF or Silverlight to integrate DLR based controls into the xaml so that they can participate a little better into XAML based applications.
